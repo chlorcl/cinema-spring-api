@@ -1,0 +1,143 @@
+enum SeatStatus {
+    AVAILABLE
+    RESERVED
+    SOLD
+    NOT_AVAILABLE
+}
+
+enum RoomType {
+    VIP
+    STANDARD
+}
+
+enum RoomSizeType {
+    SMALL
+    MEDIUM
+    LARGE
+}
+
+enum SeatType {
+    VIP
+    STANDARD
+}
+
+enum TicketStatus {
+    AVAILABLE
+    RESERVED
+    SOLD
+}
+
+enum TicketType {
+    VIP
+    STANDARD
+}
+
+enum ScreeningStatus {
+    UPCOMING
+    IN_PROGRESS
+    FINISHED
+}
+
+type Cinema {
+    id: ID
+    rooms: [Room]
+    name: String
+    address: String
+    city: String
+    postalCode: String
+    phoneNumber: String
+    email: String
+}
+
+type Room {
+    id: ID
+    name: String
+    seats: [Seat]
+    type: RoomType
+    sizeType: RoomSizeType
+    capacity: Int
+}
+
+type Seat {
+    id: ID
+    row: Int
+    number: Int
+    type: SeatType
+    status: SeatStatus
+    price: Float
+}
+
+type Ticket {
+    id: ID
+    seat: Seat
+    screening: Screening
+    price: Float
+    discount: Float
+    total: Float
+    status: TicketStatus
+    type: TicketType
+    purchaseDate: String
+    isValidate: Boolean
+}
+
+type Movie {
+    id: ID
+    title: String
+    description: String
+    duration: Int
+    genre: String
+    releaseDate: String
+    director: String
+    actors: [String]
+    rating: Float
+    poster: String
+    trailer: String
+}
+
+type Screening {
+    id: ID
+    movie: Movie
+    cinema: Cinema
+    room: Room
+    date: String
+    time: String
+    tickets: [Ticket]
+    seats: [Seat]
+    status: ScreeningStatus
+}
+
+type Query {
+    cinemas: [Cinema]
+    cinema(id: ID): Cinema
+    rooms: [Room]
+    room(id: ID): Room
+    seats: [Seat]
+    seat(id: ID): Seat
+    tickets: [Ticket]
+    ticket(id: ID): Ticket
+    movies: [Movie]
+    movie(id: ID): Movie
+    screenings: [Screening]
+    screening(id: ID): Screening
+}
+
+type Mutation {
+    createCinema(name: String, address: String, city: String, postalCode: String, phoneNumber: String, email: String): Cinema
+    updateCinema(id: ID, name: String, address: String, city: String, postalCode: String, phoneNumber: String, email: String): Cinema
+    deleteCinema(id: ID): Cinema
+    createRoom(name: String, type: RoomType, sizeType: RoomSizeType, capacity: Int): Room
+    updateRoom(id: ID, name: String, type: RoomType, sizeType: RoomSizeType, capacity: Int): Room
+    deleteRoom(id: ID): Room
+    createSeat(row: Int, number: Int, type: SeatType, status: SeatStatus, price: Float): Seat
+    updateSeat(id: ID, row: Int, number: Int, type: SeatType, status: SeatStatus, price: Float): Seat
+    deleteSeat(id: ID): Seat
+    createTicket(seatId: ID, screeningId: ID, price: Float, discount: Float, total: Float, status: TicketStatus, type: TicketType, purchaseDate: String, isValidate: Boolean): Ticket
+    updateTicket(id: ID, seatId: ID, screeningId: ID, price: Float, discount: Float, total: Float, status: TicketStatus, type: TicketType, purchaseDate: String, isValidate: Boolean): Ticket
+    deleteTicket(id: ID): Ticket
+    createMovie(title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, trailer: String): Movie
+    updateMovie(id: ID, title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, trailer: String): Movie
+    deleteMovie(id: ID): Movie
+    createScreening(movieId: ID, cinemaId: ID, roomId: ID, date: String, time: String, status: ScreeningStatus): Screening
+    updateScreening(id: ID, movieId: ID, cinemaId: ID, roomId: ID, date: String, time: String, status: ScreeningStatus): Screening
+    deleteScreening(id: ID): Screening
+}
