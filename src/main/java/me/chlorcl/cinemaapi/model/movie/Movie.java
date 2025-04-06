@@ -11,6 +11,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
+    @Lob
     private String description;
     private Integer duration;
     private String genre;
@@ -18,13 +19,14 @@ public class Movie {
     private String releaseDate;
     private Float rating;
     private String poster;
+    private String thumbnail;
     private String trailer;
 
     @CollectionTable(name = "movie_actors", joinColumns = @JoinColumn(name = "movie_id"))
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private List<String> actors;
 
-    public Movie(String title, String description, Integer duration, String genre, String releaseDate, String director, List<String> actors, Float rating, String poster, String trailer) {
+    public Movie(String title, String description, Integer duration, String genre, String releaseDate, String director, List<String> actors, Float rating, String poster, String thumbnail, String trailer) {
         this.title = title;
         this.description = description;
         this.duration = duration;
@@ -34,6 +36,7 @@ public class Movie {
         this.actors = actors;
         this.rating = rating;
         this.poster = poster;
+        this.thumbnail = thumbnail;
         this.trailer = trailer;
     }
 
@@ -127,5 +130,13 @@ public class Movie {
 
     public void setActors(List<String> actors) {
         this.actors = actors;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

@@ -34,8 +34,8 @@ public class MovieController {
 
     @AdminAuthorization
     @MutationMapping
-    public Movie createMovie(@Argument String title, @Argument String description, @Argument Integer duration, @Argument String genre, @Argument String releaseDate, @Argument String director, @Argument List<String> actors, @Argument Float rating, @Argument String poster, @Argument String trailer) {
-        Movie movie = new Movie(title, description, duration, genre, releaseDate, director, actors, rating, poster, trailer);
+    public Movie createMovie(@Argument String title, @Argument String description, @Argument Integer duration, @Argument String genre, @Argument String releaseDate, @Argument String director, @Argument List<String> actors, @Argument Float rating, @Argument String poster, @Argument String thumbnail, @Argument String trailer) {
+        Movie movie = new Movie(title, description, duration, genre, releaseDate, director, actors, rating, poster, thumbnail, trailer);
         return movieRepository.save(movie);
     }
 

@@ -91,6 +91,7 @@ type Movie {
     actors: [String]
     rating: Float
     poster: String
+    thumbnail: String
     trailer: String
 }
 
@@ -121,7 +122,47 @@ type Query {
     screening(id: ID): Screening
 }
 
+enum UserRole {
+    ROLE_USER
+    ROLE_EMPLOYEE
+    ROLE_ADMIN
+}
+
+type User {
+    id: ID
+    username: String
+    email: String
+    name: String
+    surname: String
+    phone: String
+    role: UserRole
+}
+
+type AuthResponse {
+    token: String
+    user: User
+}
+
+input LoginInput {
+    username: String!
+    password: String!
+}
+
+input RegisterInput {
+    username: String!
+    password: String!
+    email: String!
+    name: String
+    surname: String
+    phone: String
+}
+
 type Mutation {
+    # Authentication mutations
+    login(input: LoginInput!): AuthResponse
+    register(input: RegisterInput!): AuthResponse
+
+    # Existing mutations
     createCinema(name: String, address: String, city: String, postalCode: String, phoneNumber: String, email: String): Cinema
     updateCinema(id: ID, name: String, address: String, city: String, postalCode: String, phoneNumber: String, email: String): Cinema
     deleteCinema(id: ID): Cinema
@@ -134,7 +175,7 @@ type Mutation {
     createTicket(seatId: ID, screeningId: ID, price: Float, discount: Float, total: Float, status: TicketStatus, type: TicketType, purchaseDate: String, isValidate: Boolean): Ticket
     updateTicket(id: ID, seatId: ID, screeningId: ID, price: Float, discount: Float, total: Float, status: TicketStatus, type: TicketType, purchaseDate: String, isValidate: Boolean): Ticket
     deleteTicket(id: ID): Ticket
-    createMovie(title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, trailer: String): Movie
+    createMovie(title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, thumbnail: String, trailer: String): Movie
     updateMovie(id: ID, title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, trailer: String): Movie
     deleteMovie(id: ID): Movie
     createScreening(movieId: ID, cinemaId: ID, roomId: ID, date: String, time: String, status: ScreeningStatus): Screening
