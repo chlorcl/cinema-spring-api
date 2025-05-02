@@ -3,7 +3,9 @@ package me.chlorcl.cinemaapi.model.seat;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import me.chlorcl.cinemaapi.model.room.Room;
-import me.chlorcl.cinemaapi.model.screening.Screening;
+import org.hibernate.annotations.OnDelete;
+
+import static org.hibernate.annotations.OnDeleteAction.SET_NULL;
 
 @Entity
 @Table(name = "seat")
@@ -18,12 +20,9 @@ public class Seat {
     private Float price;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = true)
+    @OnDelete(action = SET_NULL)
     private Room room;
-
-    @ManyToOne
-    @JoinColumn(name = "screening_id")
-    private Screening screening;
 
     public Seat(Integer row, Integer number, SeatType type, SeatStatus status, Float price) {
         this.row = row;
@@ -83,5 +82,13 @@ public class Seat {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }

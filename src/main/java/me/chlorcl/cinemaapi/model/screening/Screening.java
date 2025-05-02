@@ -6,8 +6,11 @@ import me.chlorcl.cinemaapi.model.movie.Movie;
 import me.chlorcl.cinemaapi.model.room.Room;
 import me.chlorcl.cinemaapi.model.seat.Seat;
 import me.chlorcl.cinemaapi.model.ticket.Ticket;
+import org.hibernate.annotations.OnDelete;
 
 import java.util.Set;
+
+import static org.hibernate.annotations.OnDeleteAction.SET_NULL;
 
 @Entity
 @Table(name = "screening")
@@ -20,13 +23,12 @@ public class Screening {
     @ManyToOne
     private Cinema cinema;
     @ManyToOne
+    @OnDelete(action = SET_NULL)
     private Room room;
     private String date;
     private String time;
     @OneToMany(mappedBy = "screening")
     private Set<Ticket> tickets;
-    @OneToMany(mappedBy = "screening")
-    private Set<Seat> seats;
     @Enumerated(EnumType.STRING)
     private ScreeningStatus status;
 
@@ -38,6 +40,7 @@ public class Screening {
         this.time = time;
         this.status = status;
     }
+
 
     public Screening() {
 
@@ -99,13 +102,6 @@ public class Screening {
         this.tickets = tickets;
     }
 
-    public Set<Seat> getSeats() {
-        return seats;
-    }
-
-    public void setSeats(Set<Seat> seats) {
-        this.seats = seats;
-    }
 
     public ScreeningStatus getStatus() {
         return status;
@@ -113,5 +109,14 @@ public class Screening {
 
     public void setStatus(ScreeningStatus status) {
         this.status = status;
+    }
+
+    /**
+     * Returns the seats of the room associated with this screening.
+     * This method is used by GraphQL to resolve the 'seats' field in the Screening type.
+     * @return the seats of the room associated with this screening
+     */
+    public Set<Seat> getSeats() {
+        return room != null ? room.getSeats() : null;
     }
 }

@@ -41,7 +41,7 @@ public class MovieController {
 
     @AdminAuthorization
     @MutationMapping
-    public Movie updateMovie(@Argument Integer id, @Argument String title, @Argument String description, @Argument Integer duration, @Argument String genre, @Argument String releaseDate, @Argument String director, @Argument List<String> actors, @Argument Float rating, @Argument String poster, @Argument String trailer) {
+    public Movie updateMovie(@Argument Integer id, @Argument String title, @Argument String description, @Argument Integer duration, @Argument String genre, @Argument String releaseDate, @Argument String director, @Argument List<String> actors, @Argument Float rating, @Argument String poster, @Argument String thumbnail, @Argument String trailer) {
         Movie movie = movieRepository.findById(id).orElseThrow();
         movie.setTitle(title);
         movie.setDescription(description);
@@ -52,6 +52,7 @@ public class MovieController {
         movie.setActors(actors);
         movie.setRating(rating);
         movie.setPoster(poster);
+        movie.setThumbnail(thumbnail);
         movie.setTrailer(trailer);
         return movieRepository.save(movie);
     }

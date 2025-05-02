@@ -1,7 +1,9 @@
 package me.chlorcl.cinemaapi.controller;
 
 import me.chlorcl.cinemaapi.model.cinema.Cinema;
+import me.chlorcl.cinemaapi.model.room.Room;
 import me.chlorcl.cinemaapi.repository.CinemaRepository;
+import me.chlorcl.cinemaapi.repository.RoomRepository;
 import me.chlorcl.cinemaapi.security.annotation.AdminAuthorization;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -13,9 +15,11 @@ import java.util.List;
 @Controller
 public class CinemaController {
     private final CinemaRepository cinemaRepository;
+    private final RoomRepository roomRepository;
 
-    public CinemaController(CinemaRepository cinemaRepository) {
+    public CinemaController(CinemaRepository cinemaRepository, RoomRepository roomRepository) {
         this.cinemaRepository = cinemaRepository;
+        this.roomRepository = roomRepository;
     }
 
     @QueryMapping
@@ -53,6 +57,32 @@ public class CinemaController {
     public Cinema deleteCinema(@Argument Integer id) {
         Cinema cinema = cinemaRepository.findById(id).orElseThrow();
         cinemaRepository.delete(cinema);
+        return cinema;
+    }
+
+    @AdminAuthorization
+    @MutationMapping
+    public Cinema addRoomToCinema(@Argument Integer cinemaId, @Argument Integer roomId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId).orElseThrow();
+        Room room = roomRepository.findById(roomId).orElseThrow();
+
+        room.setCinema(cinema);
+        roomRepository.save(room);
+
+        return cinema;
+    }
+
+    @AdminAuthorization
+    @MutationMapping
+    public Cinema removeRoomFromCinema(@Argument Integer cinemaId, @Argument Integer roomId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId).orElseThrow();
+        Room room = roomRepository.findById(roomId).orElseThrow();
+
+        if (room.getCinema() != null && room.getCinema().getId().equals(cinemaId)) {
+            room.setCinema(null);
+            roomRepository.save(room);
+        }
+
         return cinema;
     }
 }

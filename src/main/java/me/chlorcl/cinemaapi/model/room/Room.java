@@ -84,4 +84,12 @@ public class Room {
     public void setSeats(Set<Seat> seats) {
         this.seats = seats;
     }
+
+    public Cinema getCinema() {
+        return cinema;
+    }
+
+    public void setCinema(Cinema cinema) {
+        this.cinema = cinema;
+    }
 }

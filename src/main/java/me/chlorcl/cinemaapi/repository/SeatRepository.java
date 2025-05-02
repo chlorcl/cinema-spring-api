@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Integer> {
+    void deleteAllByRoomId(Integer roomId);
 }

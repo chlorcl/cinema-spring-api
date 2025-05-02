@@ -38,6 +38,12 @@ enum ScreeningStatus {
     FINISHED
 }
 
+enum OrderStatus {
+    PENDING
+    COMPLETED
+    CANCELLED
+}
+
 type Cinema {
     id: ID
     rooms: [Room]
@@ -78,6 +84,34 @@ type Ticket {
     type: TicketType
     purchaseDate: String
     isValidate: Boolean
+    verificationCode: String
+}
+
+type Order {
+    id: ID
+    user: User
+    orderDate: String
+    totalAmount: Float
+    status: String
+    items: [OrderItem]
+}
+
+type OrderItem {
+    id: ID
+    order: Order
+    ticket: Ticket
+    price: Float
+}
+
+type TicketPriceConfig {
+    id: ID
+    seatType: SeatType
+    ticketType: TicketType
+    basePrice: Float
+    weekendSurcharge: Float
+    holidaySurcharge: Float
+    description: String
+    isActive: Boolean
 }
 
 type Movie {
@@ -120,6 +154,16 @@ type Query {
     movie(id: ID): Movie
     screenings: [Screening]
     screening(id: ID): Screening
+
+    # Order related queries
+    userOrders: [Order]
+    order(id: ID): Order
+    allOrders: [Order]
+
+    # Ticket price configuration queries
+    ticketPriceConfigs: [TicketPriceConfig]
+    ticketPriceConfig(id: ID): TicketPriceConfig
+    getTicketPrice(seatType: SeatType, ticketType: TicketType): TicketPriceConfig
 }
 
 enum UserRole {
@@ -166,19 +210,32 @@ type Mutation {
     createCinema(name: String, address: String, city: String, postalCode: String, phoneNumber: String, email: String): Cinema
     updateCinema(id: ID, name: String, address: String, city: String, postalCode: String, phoneNumber: String, email: String): Cinema
     deleteCinema(id: ID): Cinema
+    addRoomToCinema(cinemaId: ID!, roomId: ID!): Cinema
+    removeRoomFromCinema(cinemaId: ID!, roomId: ID!): Cinema
     createRoom(name: String, type: RoomType, sizeType: RoomSizeType, capacity: Int): Room
     updateRoom(id: ID, name: String, type: RoomType, sizeType: RoomSizeType, capacity: Int): Room
     deleteRoom(id: ID): Room
     createSeat(row: Int, number: Int, type: SeatType, status: SeatStatus, price: Float): Seat
+    createSeatForRoom(row: Int, number: Int, type: SeatType, status: SeatStatus, price: Float, roomId: ID!): Seat
     updateSeat(id: ID, row: Int, number: Int, type: SeatType, status: SeatStatus, price: Float): Seat
     deleteSeat(id: ID): Seat
     createTicket(seatId: ID, screeningId: ID, price: Float, discount: Float, total: Float, status: TicketStatus, type: TicketType, purchaseDate: String, isValidate: Boolean): Ticket
     updateTicket(id: ID, seatId: ID, screeningId: ID, price: Float, discount: Float, total: Float, status: TicketStatus, type: TicketType, purchaseDate: String, isValidate: Boolean): Ticket
     deleteTicket(id: ID): Ticket
     createMovie(title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, thumbnail: String, trailer: String): Movie
-    updateMovie(id: ID, title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, trailer: String): Movie
+    updateMovie(id: ID, title: String, description: String, duration: Int, genre: String, releaseDate: String, director: String, actors: [String], rating: Float, poster: String, thumbnail: String, trailer: String): Movie
     deleteMovie(id: ID): Movie
     createScreening(movieId: ID, cinemaId: ID, roomId: ID, date: String, time: String, status: ScreeningStatus): Screening
     updateScreening(id: ID, movieId: ID, cinemaId: ID, roomId: ID, date: String, time: String, status: ScreeningStatus): Screening
     deleteScreening(id: ID): Screening
+    getScreeningSeats(screeningId: ID!): [Seat]
+
+    # Order related mutations
+    createOrder(screeningId: ID!, seatIds: [ID!]!, ticketTypes: [TicketType!]!): Order
+    cancelOrder(orderId: ID!): Order
+
+    # Ticket price configuration mutations
+    createTicketPriceConfig(seatType: SeatType!, ticketType: TicketType!, basePrice: Float!, weekendSurcharge: Float, holidaySurcharge: Float, description: String, isActive: Boolean!): TicketPriceConfig
+    updateTicketPriceConfig(id: ID!, seatType: SeatType, ticketType: TicketType, basePrice: Float, weekendSurcharge: Float, holidaySurcharge: Float, description: String, isActive: Boolean): TicketPriceConfig
+    deleteTicketPriceConfig(id: ID!): TicketPriceConfig
 }
