@@ -23,8 +23,9 @@ public class Ticket {
     private TicketType type;
     private String purchaseDate;
     private Boolean isValidate;
+    private String verificationCode; // Unique code for ticket verification
 
-    public Ticket(Seat seat, Screening screening, Float price, Float discount, Float total, TicketStatus status, TicketType type, String purchaseDate, Boolean isValidate) {
+    public Ticket(Seat seat, Screening screening, Float price, Float discount, Float total, TicketStatus status, TicketType type, String purchaseDate, Boolean isValidate, String verificationCode) {
         this.seat = seat;
         this.screening = screening;
         this.price = price;
@@ -34,6 +35,11 @@ public class Ticket {
         this.type = type;
         this.purchaseDate = purchaseDate;
         this.isValidate = isValidate;
+        this.verificationCode = verificationCode;
+    }
+
+    public Ticket(Seat seat, Screening screening, Float price, Float discount, Float total, TicketStatus status, TicketType type, String purchaseDate, Boolean isValidate) {
+        this(seat, screening, price, discount, total, status, type, purchaseDate, isValidate, null);
     }
 
     public Ticket() {
@@ -118,5 +124,13 @@ public class Ticket {
 
     public void setIsValidate(Boolean isValidate) {
         this.isValidate = isValidate;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 }
